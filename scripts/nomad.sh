@@ -1,19 +1,42 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# add nomad to docker group
+usermod -G docker -a nomad
+
 # write nomad config
 cat <<EOF > /opt/nomad/config.hcl
+name = "$NAME"
+
 advertise {
   http = "$ADVERTISE_ADDR"
   rpc  = "$ADVERTISE_ADDR"
   serf = "$ADVERTISE_ADDR"
 }
 
+EOF
+
+: ${SERVER:=''}
+
+if [ -n "$SERVER" ]; then
+  cat <<EOF >> /opt/nomad/config.hcl
 server {
   enabled = true
   bootstrap_expect = $BOOTSTRAP_EXPECT
 }
 EOF
+else
+  cat <<EOF >> /opt/nomad/config.hcl
+client {
+  enabled = true
+  server_join {
+    retry_join = $RETRY_JOIN
+    retry_max = 15
+    retry_interval = "15s"
+  }
+}
+EOF
+fi
 
 # write systemd config
 cat <<EOF > /etc/systemd/system/nomad.service
@@ -42,6 +65,7 @@ OOMScoreAdjust=-1000
 [Install]
 WantedBy=multi-user.target
 EOF
+
 
 systemctl daemon-reload
 systemctl restart nomad
