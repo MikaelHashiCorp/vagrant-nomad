@@ -1,11 +1,8 @@
 Vagrant.configure("2") do |config|
-  config.vm.define "source", autostart: false do |source|
-    source.vm.box = "ubuntu/focal64"
-    config.ssh.insert_key = false
-  end
-
-  # server; only 1 supported presently
-  1.upto(1) do |n|
+  server_count = 1
+  client_count = 1
+  # server(s)
+  1.upto(server_count) do |n|
     ip = "10.199.0.%d" % [10 * n]
     name = "nomad-server-%02d" % n
 
@@ -13,101 +10,26 @@ Vagrant.configure("2") do |config|
       output.vm.box = "packer_vagrant"
       output.vm.box_url = "file://package.box"
       output.vm.network :private_network, ip: ip
-      output.vm.provision "shell", name: "consul config", inline: <<EOF
-# write Consul config
-mkdir -p /opt/consul/{config,data}
-chown consul:consul /opt/consul/{config,data}
-cat <<FOE > /opt/consul/config/server.hcl
-datacenter = "vagrant"
-data_dir = "/opt/consul/data"
-log_level = "INFO"
-server = true
-client_addr = "0.0.0.0"
-ui = true
-bind_addr = "{{ GetPrivateInterfaces | include \\"network\\" \\"10.199.0.0/24\\" | attr \\"address\\" }}"
-bootstrap_expect = 1
-FOE
+      output.vm.provision "shell",
+        name: "consul",
+        path: "scripts/consul.sh",
+        env: {
+          BOOTSTRAP_EXPECT: server_count,
+          BIND_ADDR_CIDR: "%s/24" % ip
+        }
 
-# write Consul systemd config
-cat <<FOE > /etc/systemd/system/consul.service
-[Unit]
-Description="HashiCorp Consul - A service mesh solution"
-Documentation=https://www.consul.io/
-Requires=network-online.target
-After=network-online.target
-
-[Service]
-Type=simple
-User=consul
-Group=consul
-ExecStart=/opt/consul/bin/consul agent -config-dir /opt/consul/config
-ExecReload=/opt/consul/bin/consul reload
-KillMode=process
-Restart=on-failure
-TimeoutSec=300s
-LimitNOFILE=65536
-
-[Install]
-WantedBy=multi-user.target
-FOE
-EOF
-      output.vm.provision "shell", name: "nomad config", inline: <<EOF
-# write nomad config
-mkdir -p /opt/nomad/config
-chown nomad:nomad /opt/nomad/config
-cat <<FOE > /opt/nomad/config/server.hcl
-advertise {
-  http = "10.199.0.10"
-  rpc  = "10.199.0.10"
-  serf = "10.199.0.10"
-}
-server {
-  enabled = true
-  bootstrap_expect = 1
-}
-FOE
-
-# write systemd config
-cat <<FOE > /etc/systemd/system/nomad.service
-[Unit]
-Description="HashiCorp Nomad"
-Documentation=https://www.nomadproject.io/
-After=consul.service docker.service network-online.target
-ConditionFileNotEmpty=/opt/nomad/config/server.hcl
-
-[Service]
-Type=simple
-User=nomad
-Group=nomad
-ExecStart=/opt/nomad/bin/nomad agent -config /opt/nomad/config/server.hcl -data-dir /opt/nomad/data
-ExecReload=/bin/kill -HUP \$MAINPID
-KillMode=process
-KillSignal=SIGINT
-Restart=on-failure
-RestartSec=2
-StartLimitBurst=3
-TimeoutSec=300s
-LimitNOFILE=infinity
-LimitNPROC=infinity
-TasksMax=infinity
-OOMScoreAdjust=-1000
-
-[Install]
-WantedBy=multi-user.target
-FOE
-EOF
-
-      output.vm.provision "shell", name: "(re)start services", inline: <<EOF
-systemctl enable nomad consul
-systemctl daemon-reload
-systemctl restart consul
-systemctl restart nomad
-EOF
+      output.vm.provision "shell",
+        name: "nomad",
+        path: "scripts/nomad.sh",
+        env: {
+          BOOTSTRAP_EXPECT: server_count,
+          ADVERTISE_ADDR: ip
+        }
     end
   end
 
   # clients
-  1.upto(1) do |n|
+  1.upto(client_count) do |n|
     ip = "10.199.1.%d" % [10 * n]
     name = "nomad-client-%02d" % n
 
