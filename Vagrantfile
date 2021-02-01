@@ -9,12 +9,12 @@ Vagrant.configure("2") do |config|
     id = "server-%02d" % n
     name = "nomad-%s" % id
 
-    config.vm.define name, autostart: true do |output|
-      output.vm.box = "packer_vagrant"
-      output.vm.box_url = "file://package.box"
-      output.vm.network :private_network, ip: ip
+    config.vm.define name, autostart: true do |server|
+      server.vm.box = "packer_vagrant"
+      server.vm.box_url = "file://package.box"
+      server.vm.network :private_network, ip: ip
 
-      output.vm.provision "shell",
+      server.vm.provision "shell",
         name: "consul",
         path: "scripts/consul.sh",
         env: {
@@ -25,7 +25,7 @@ Vagrant.configure("2") do |config|
           RETRY_JOIN: server_ips.reject { |other| other == ip }.to_s,
         }
 
-      output.vm.provision "shell",
+      server.vm.provision "shell",
         name: "nomad",
         path: "scripts/nomad.sh",
         env: {
@@ -42,12 +42,12 @@ Vagrant.configure("2") do |config|
     id = "client-%02d" % n
     name = "nomad-%s" % id
 
-    config.vm.define name, autostart: true do |output|
-      output.vm.box = "packer_vagrant"
-      output.vm.box_url = "file://package.box"
-      output.vm.network :private_network, ip: ip
+    config.vm.define name, autostart: true do |client|
+      client.vm.box = "packer_vagrant"
+      client.vm.box_url = "file://package.box"
+      client.vm.network :private_network, ip: ip
 
-      output.vm.provision "shell",
+      client.vm.provision "shell",
         name: "consul",
         path: "scripts/consul.sh",
         env: {
@@ -56,7 +56,7 @@ Vagrant.configure("2") do |config|
           NODE_NAME: id,
         }
 
-      output.vm.provision "shell",
+      client.vm.provision "shell",
         name: "nomad",
         path: "scripts/nomad.sh",
         env: {
