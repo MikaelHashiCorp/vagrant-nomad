@@ -14,6 +14,12 @@ advertise {
   serf = "$ADVERTISE_ADDR"
 }
 
+server_join {
+  retry_join = $RETRY_JOIN
+  retry_max = 15
+  retry_interval = "3s"
+}
+
 EOF
 
 : ${SERVER:=''}
@@ -29,11 +35,6 @@ else
   cat <<EOF >> /opt/nomad/config.hcl
 client {
   enabled = true
-  server_join {
-    retry_join = $RETRY_JOIN
-    retry_max = 15
-    retry_interval = "15s"
-  }
 }
 EOF
 fi

@@ -6,12 +6,14 @@ chown consul:consul /opt/consul/data
 
 # write config
 cat <<EOF > /opt/consul/config.hcl
+node_name        = "$NODE_NAME"
 datacenter       = "vagrant"
 data_dir         = "/opt/consul/data"
 log_level        = "INFO"
 client_addr      = "0.0.0.0"
 ui               = true
-bind_addr        = "{{ GetPrivateInterfaces | include \\"network\\" \\"$BIND_ADDR_CIDR\\" | attr \\"address\\" }}"
+bind_addr        = "$BIND_ADDR"
+retry_join       = $RETRY_JOIN
 EOF
 
 : ${SERVER:=''}
@@ -20,11 +22,6 @@ if [ -n "$SERVER" ]; then
   cat <<EOF >> /opt/consul/config.hcl
 server           = $SERVER
 bootstrap_expect = $BOOTSTRAP_EXPECT
-EOF
-else
-  cat <<EOF >> /opt/consul/config.hcl
-retry_join       = $RETRY_JOIN
-node_name        = "$NODE_NAME"
 EOF
 fi
 

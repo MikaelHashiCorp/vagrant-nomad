@@ -1,11 +1,10 @@
+server_count = 1
+client_count = 1
+
+server_ips = (1..server_count).map {|n| "10.199.0.%d" % [10*n]}
+client_ips = (1..client_count).map {|n| "10.199.1.%d" % [10*n]}
+
 Vagrant.configure("2") do |config|
-  server_count = 1
-  client_count = 2
-
-  server_ips = (1..server_count).map {|n| "10.199.0.%d" % [10*n]}
-  client_ips = (1..client_count).map {|n| "10.199.1.%d" % [10*n]}
-
-  # server(s)
   server_ips.each_with_index do |ip, n|
     id = "server-%02d" % n
     name = "nomad-%s" % id
@@ -14,14 +13,16 @@ Vagrant.configure("2") do |config|
       output.vm.box = "packer_vagrant"
       output.vm.box_url = "file://package.box"
       output.vm.network :private_network, ip: ip
+
       output.vm.provision "shell",
         name: "consul",
         path: "scripts/consul.sh",
         env: {
           SERVER: true,
           BOOTSTRAP_EXPECT: server_count,
-          BIND_ADDR_CIDR: "%s/24" % ip,
+          BIND_ADDR: ip,
           NODE_NAME: id,
+          RETRY_JOIN: server_ips.reject { |other| other == ip }.to_s,
         }
 
       output.vm.provision "shell",
@@ -32,11 +33,11 @@ Vagrant.configure("2") do |config|
           BOOTSTRAP_EXPECT: server_count,
           ADVERTISE_ADDR: ip,
           NAME: id,
+          RETRY_JOIN: server_ips.reject { |other| other == ip }.to_s,
         }
     end
   end
 
-  # client(s)
   client_ips.each_with_index do |ip, n|
     id = "client-%02d" % n
     name = "nomad-%s" % id
@@ -45,12 +46,13 @@ Vagrant.configure("2") do |config|
       output.vm.box = "packer_vagrant"
       output.vm.box_url = "file://package.box"
       output.vm.network :private_network, ip: ip
+
       output.vm.provision "shell",
         name: "consul",
         path: "scripts/consul.sh",
         env: {
           RETRY_JOIN: server_ips.to_s,
-          BIND_ADDR_CIDR: "%s/24" % ip,
+          BIND_ADDR: ip,
           NODE_NAME: id,
         }
 
