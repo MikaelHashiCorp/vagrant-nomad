@@ -14,6 +14,14 @@ client_addr      = "0.0.0.0"
 ui               = true
 bind_addr        = "$BIND_ADDR"
 retry_join       = $RETRY_JOIN
+
+ports {
+  grpc = 8502
+}
+
+connect {
+  enabled = true
+}
 EOF
 
 : ${SERVER:=''}

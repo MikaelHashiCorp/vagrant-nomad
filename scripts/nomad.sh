@@ -78,6 +78,7 @@ After=consul.service docker.service network-online.target
 Type=simple
 ExecStart=/opt/nomad/bin/nomad agent -config /opt/nomad/config.hcl -data-dir /opt/nomad/data
 ExecReload=/bin/kill -HUP \$MAINPID
+Environment="PATH=/opt/consul/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin"
 KillMode=process
 KillSignal=SIGINT
 Restart=on-failure
