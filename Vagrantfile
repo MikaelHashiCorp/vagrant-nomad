@@ -14,6 +14,8 @@ Vagrant.configure("2") do |config|
       server.vm.box_url = "file://package.box"
       server.vm.network :private_network, ip: ip
 
+      maybe_replace_nomad(server)
+
       server.vm.provision "shell",
         name: "consul",
         path: "scripts/consul.sh",
@@ -47,6 +49,8 @@ Vagrant.configure("2") do |config|
       client.vm.box_url = "file://package.box"
       client.vm.network :private_network, ip: ip
 
+      maybe_replace_nomad(client)
+
       client.vm.provision "shell",
         name: "consul",
         path: "scripts/consul.sh",
@@ -68,4 +72,13 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.synced_folder ".", "/vagrant", disabled: true
+end
+
+def maybe_replace_nomad(config)
+  # For uploading a custom Nomad binary
+  if File.file?("#{Dir.pwd}/nomad")
+    config.vm.provision "file",
+      source: "nomad",
+      destination: "/tmp/nomad"
+  end
 end
