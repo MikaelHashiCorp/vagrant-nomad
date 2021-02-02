@@ -45,7 +45,6 @@ Vagrant.configure("2") do |config|
 
     config.vm.define name, autostart: true do |client|
       client.vm.box = "krishicks/nomad"
-      client.vm.box_url = "file://package.box"
       client.vm.network :private_network, ip: ip
 
       maybe_replace_nomad(client)
