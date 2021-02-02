@@ -56,6 +56,13 @@ else
 client {
   enabled = true
 }
+
+plugin "raw_exec" {
+  config {
+    enabled = true
+  }
+}
+
 EOF
 fi
 
@@ -68,8 +75,6 @@ After=consul.service docker.service network-online.target
 
 [Service]
 Type=simple
-User=nomad
-Group=nomad
 ExecStart=/opt/nomad/bin/nomad agent -config /opt/nomad/config.hcl -data-dir /opt/nomad/data
 ExecReload=/bin/kill -HUP \$MAINPID
 KillMode=process
