@@ -1,0 +1,30 @@
+{
+  "builders": [
+    {
+      "communicator": "ssh",
+      "source_path": "ubuntu/focal64",
+      "provider": "virtualbox",
+      "add_force": true,
+      "type": "vagrant"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "execute_command": "{{.Vars}} sudo -E -S bash '{{.Path}}'",
+      "scripts": [
+        "scripts/base-apt.sh",
+        "scripts/disable-motd-news.sh",
+        "scripts/install-cni-plugins.sh",
+        "scripts/install-docker.sh",
+        "scripts/install-java.sh",
+        "scripts/install-qemu.sh",
+        "scripts/install-nomad.sh",
+        "scripts/install-consul.sh",
+        "scripts/install-vault.sh",
+        "scripts/install-libc6-from-groovy.sh",
+        "scripts/cleanup.sh"
+      ]
+    }
+  ]
+}
