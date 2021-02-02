@@ -50,6 +50,7 @@ server {
   enabled = true
   bootstrap_expect = $BOOTSTRAP_EXPECT
 }
+
 EOF
 else
   cat <<EOF >> /opt/nomad/config.hcl
