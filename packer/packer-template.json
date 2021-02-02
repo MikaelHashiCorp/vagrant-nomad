@@ -1,11 +1,12 @@
 {
   "builders": [
     {
-      "communicator": "ssh",
-      "source_path": "ubuntu/focal64",
+      "type": "vagrant",
       "provider": "virtualbox",
-      "add_force": true,
-      "type": "vagrant"
+      "source_path": "ubuntu/focal64",
+      "box_name": "krishicks/nomad",
+      "communicator": "ssh",
+      "add_force": true
     }
   ],
   "provisioners": [
