@@ -1,4 +1,4 @@
-server_count = 1
+server_count = 1 # 1, 3, or 5
 client_count = 1
 
 server_ips = (1..server_count).map {|n| "10.199.0.%d" % [10*n]}
