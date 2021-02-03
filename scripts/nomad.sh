@@ -56,6 +56,7 @@ else
   cat <<EOF >> /opt/nomad/config.hcl
 client {
   enabled = true
+  network_interface = "enp0s8"
 }
 
 plugin "raw_exec" {
