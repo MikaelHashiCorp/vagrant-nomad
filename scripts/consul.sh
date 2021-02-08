@@ -56,6 +56,8 @@ LimitNOFILE=65536
 WantedBy=multi-user.target
 EOF
 
+systemctl enable consul
+
 # reload and restart
 systemctl daemon-reload
 systemctl restart consul

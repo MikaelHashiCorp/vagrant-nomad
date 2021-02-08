@@ -95,6 +95,9 @@ OOMScoreAdjust=-1000
 WantedBy=multi-user.target
 EOF
 
+
+systemctl enable nomad
+
 # daemon-reload didn't work here; systemd fails to start a replaced Nomad
 # binary with 217/USER unless we use daemon-reexec. :shrug:
 systemctl daemon-reexec
