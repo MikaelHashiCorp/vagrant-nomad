@@ -7,8 +7,6 @@ clients="$(echo "$vms" | grep client | cut -f1 -d' ')"
 
 export CONSUL_HTTP_ADDR=http://10.199.0.10:8500
 
-[ "$1" == "-f" ] && force=true
-
 if [ -z "$vms" ]; then echo "no vms found; exiting" && exit 1; fi
 if [ -z "$servers" ]; then echo "no servers found; exiting" && exit 1; fi
 if [ -z "$clients" ]; then echo "no clients found; exiting" && exit 1; fi
@@ -37,31 +35,10 @@ while true; do
 done
 
 # bootstrap (or re-bootstrap) Consul
-output="$(consul acl bootstrap -format=json 2>&1)"
-
-if echo "$output" | grep "reset index" >/dev/null; then
-  if [ -z "$force" ]; then
-    echo "Consul already bootstrapped; re-run with -f to re-bootstrap"
-    exit 1
-  fi
-
-  echo "resetting bootstrap"
-
-  resetIndex="$(echo "$output" | sed 's/.*reset index: \(.*\))).*/\1/g')"
-
-  for machine in $servers; do
-    vagrant ssh "$machine" -c "echo $resetIndex | sudo tee -a /opt/consul/data/acl-bootstrap-reset" >/dev/null 2>&1
-  done
-
-  consulBootstrapJSON="$(consul acl bootstrap -format=json)"
-else
-  consulBootstrapJSON="$output"
-fi
+consulBootstrapJSON="$(consul acl bootstrap -format=json 2>&1)"
 
 consulToken="$(jq -r '.SecretID' <<< "$consulBootstrapJSON")"
 export CONSUL_HTTP_TOKEN="$consulToken"
-
-bootstrapTokenID="$(jq -r '.AccessorID' <<< "$consulBootstrapJSON")"
 
 echo "bootstrap complete"
 echo "use the following to set up your environment"
@@ -69,32 +46,6 @@ echo
 echo "export CONSUL_HTTP_TOKEN=$consulToken"
 echo
 
-# delete existing nomad policies
-for name in $(
-  consul acl policy list -format json |
-    jq -r '
-      map(
-        select(.Name | contains("nomad-")) | .Name
-      ) | join("\n")
-    '
-); do consul acl policy delete -name "$name" >/dev/null; done
-
-# delete existing nomad agent and other bootstrap tokens
-for id in $(
-  consul acl token list -format json |
-    jq -r --arg id "$bootstrapTokenID" '
-      map(
-        select(
-          # any agent tokens
-          (.Description == "Nomad agent token")
-          or 
-          # any bootstrap token other than the one we just made
-          (.AccessorID != $id and .Description != "Anonymous Token")
-        )
-        | .AccessorID
-      ) | join("\n")
-    '
-); do consul acl token delete -id "$id" >/dev/null; done
 
   serverPolicy="$(cat <<EOF
 agent_prefix "" {
