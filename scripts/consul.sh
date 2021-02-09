@@ -22,6 +22,8 @@ ports {
 connect {
   enabled = true
 }
+
+acl {}
 EOF
 
 : ${SERVER:=''}
