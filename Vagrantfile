@@ -46,6 +46,10 @@ Vagrant.configure("2") do |config|
       client.vm.box = "krishicks/nomad"
       client.vm.network :private_network, ip: ip
 
+      # client.vm.provider "virtualbox" do |provider|
+      #   provider.memory = "2048"
+      # end
+
       maybe_replace_nomad(client)
 
       client.vm.provision "shell",
