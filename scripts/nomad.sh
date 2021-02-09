@@ -31,15 +31,10 @@ advertise {
   serf = "$ADVERTISE_ADDR"
 }
 
-server_join {
-  retry_join = $RETRY_JOIN
-  retry_max = 15
-  retry_interval = "3s"
-}
-
 leave_on_interrupt = true
 leave_on_terminate = true
 
+consul {}
 EOF
 
 : ${SERVER:=''}

@@ -33,8 +33,7 @@ Vagrant.configure("2") do |config|
           SERVER: true,
           BOOTSTRAP_EXPECT: server_count,
           ADVERTISE_ADDR: ip,
-          NAME: id,
-          RETRY_JOIN: server_ips.reject { |other| other == ip }.to_s,
+          NAME: name,
         }
     end
   end
@@ -63,8 +62,7 @@ Vagrant.configure("2") do |config|
         path: "scripts/nomad.sh",
         env: {
           ADVERTISE_ADDR: ip,
-          NAME: id,
-          RETRY_JOIN: server_ips.map { |ip| ip + ":4647" }.to_s,
+          NAME: name,
         }
     end
   end
