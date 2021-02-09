@@ -18,7 +18,7 @@ sudo systemctl restart consul
 EOF
 )"
 
-for name in $servers; do
+for name in $servers $clients; do
   vagrant ssh "$name" -c "$cmd" >/dev/null 2>&1
 done
 
@@ -46,6 +46,27 @@ echo
 echo "export CONSUL_HTTP_TOKEN=$consulToken"
 echo
 
+# create and apply Consul's own tokens
+for name in $servers $clients; do
+  id="${name/nomad-/}"
+
+  consul acl policy create \
+    -name "consul-${id}" \
+    -rules "node \"$id\" { policy = \"write\" }" >/dev/null
+
+  consulAgentToken="$(
+    consul acl token create \
+      -description "Consul agent token" \
+      -policy-name "consul-${id}" \
+      -format json | jq -r '.SecretID'
+  )"
+
+  cmd="$(cat <<EOF
+CONSUL_HTTP_TOKEN=$consulToken /opt/consul/bin/consul acl set-agent-token agent $consulAgentToken
+EOF
+)"
+  vagrant ssh "$name" -c "$cmd" >/dev/null 2>&1
+done
 
   serverPolicy="$(cat <<EOF
 agent_prefix "" {
