@@ -114,16 +114,6 @@ consul acl policy create \
   -description "Nomad client policy" \
   -rules "$clientPolicy" >/dev/null
 
-echo "creating server/client acl token"
-
-agentToken="$(
-  consul acl token create \
-    -description "Nomad agent token" \
-    -policy-name "nomad-server" \
-    -policy-name "nomad-client" \
-    -format json | jq -r '.SecretID'
-)"
-
 function waitForNomad() {
   things="$1"
   path="$2"
@@ -144,13 +134,36 @@ function waitForNomad() {
 waitForNomad servers "/status/peers" "$(echo "$servers" | wc -w)"
 waitForNomad clients "/nodes" "$(echo "$clients" | wc -w)"
 
-for name in $servers $clients; do
+function createAndApplyToken() {
+  name="$1"
+  policyName="$2"
+
   echo "applying Consul ACL token and restarting $name"
 
+  agentToken="$(
+    consul acl token create \
+      -description "Nomad agent token ($name)" \
+      -policy-name "$policyName" \
+      -format json | jq -r '.SecretID'
+  )"
+
+  # the sleep 30 is here because somehow the client continues using the Consul
+  # anonymous token after the initial restart, and so requires another restart,
+  # but only after an interval.
   cmd="$(cat <<EOF
 sudo sed -i 's/consul {.*}/consul { token = \"$agentToken\" }/g' /opt/nomad/config.hcl
+sudo systemctl restart nomad
+sleep 30
 sudo systemctl restart nomad
 EOF
 )"
   vagrant ssh "$name" -c "$cmd" >/dev/null 2>&1
+}
+
+for name in $servers; do
+  createAndApplyToken "$name" nomad-server
+done
+
+for name in $clients; do
+  createAndApplyToken "$name" nomad-client
 done
