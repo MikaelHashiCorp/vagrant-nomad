@@ -45,3 +45,11 @@ to running `vagrant up`. If you have already brought up the environment, run
 `vagrant up --provision` to update running instances. **Note: This hasn't been
 well-tested yet, so you may have to recreate the VMs. Also, downgrades
 _definitely_ haven't been tested, and should be avoided.**
+
+## Features
+- [x] Consul
+- [x] Consul ACLs (`./add-consul-acl.sh`)
+- [ ] Vault
+- [ ] AWS target
+- [ ] CSI
+- [ ] Podman task driver
