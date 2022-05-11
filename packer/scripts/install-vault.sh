@@ -9,7 +9,7 @@ fi
 # create dirs
 mkdir -p /opt/vault/bin
 
-version="1.6.2"
+version="1.10.2"
 
 # install from releases.hashicorp.com
 curl -sSL -O \

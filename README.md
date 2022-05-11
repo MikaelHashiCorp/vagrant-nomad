@@ -1,6 +1,7 @@
 # Vagrant-Nomad
 
 ## About
+### This is the CentOS 7.9 version
 
 This repo can be used to bring up a Nomad cluster playground. This is an
 alternative to running `nomad agent -dev`, which creates a unified

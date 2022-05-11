@@ -10,7 +10,7 @@ Vagrant.configure("2") do |config|
     name = "nomad-%s" % id
 
     config.vm.define name, autostart: true do |server|
-      server.vm.box = "krishicks/nomad"
+      server.vm.box = "bento/centos-7.9"
       server.vm.network :private_network, ip: ip
 
       maybe_replace_nomad(server)
@@ -43,7 +43,7 @@ Vagrant.configure("2") do |config|
     name = "nomad-%s" % id
 
     config.vm.define name, autostart: true do |client|
-      client.vm.box = "krishicks/nomad"
+      client.vm.box = "bento/centos-7.9"
       client.vm.network :private_network, ip: ip
 
       # client.vm.provider "virtualbox" do |provider|

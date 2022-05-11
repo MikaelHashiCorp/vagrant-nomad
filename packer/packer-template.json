@@ -3,8 +3,8 @@
     {
       "type": "vagrant",
       "provider": "virtualbox",
-      "source_path": "ubuntu/focal64",
-      "box_name": "krishicks/nomad",
+      "source_path": "bento/centos-7.9",
+      "box_name": "bento/centos-7.9",
       "communicator": "ssh",
       "add_force": true
     }
@@ -14,7 +14,7 @@
       "type": "shell",
       "execute_command": "{{.Vars}} sudo -E -S bash '{{.Path}}'",
       "scripts": [
-        "scripts/base-apt.sh",
+        "scripts/base-yum.sh",
         "scripts/disable-motd-news.sh",
         "scripts/install-cni-plugins.sh",
         "scripts/install-docker.sh",
@@ -23,7 +23,7 @@
         "scripts/install-nomad.sh",
         "scripts/install-consul.sh",
         "scripts/install-vault.sh",
-        "scripts/install-libc6-from-groovy.sh",
+        "scripts/install-glibc.sh",
         "scripts/cleanup.sh"
       ]
     }

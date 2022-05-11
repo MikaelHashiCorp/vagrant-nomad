@@ -9,7 +9,7 @@ fi
 # create dirs
 mkdir -p /opt/consul/bin
 
-version="1.9.2"
+version="1.12.0"
 
 # install from releases.hashicorp.com
 curl -sSL -O \
