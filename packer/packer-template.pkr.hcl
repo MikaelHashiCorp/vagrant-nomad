@@ -16,7 +16,6 @@ source "vagrant" "centos-7" {
 }
 
 build {
-  box_name  = "nomad-centos-7"
   sources   = ["source.vagrant.centos-7"]
 
   provisioner "shell" {

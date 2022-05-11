@@ -1,3 +1,4 @@
 .vagrant
-packer/output-vagrant
+packer/output*
 nomad*
+*.log
