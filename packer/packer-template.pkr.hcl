@@ -24,16 +24,11 @@ build {
                         "scripts/install-cni-plugins.sh", 
                         "scripts/install-docker.sh", 
                         "scripts/install-java.sh", 
-                        "scripts/install-qemu.sh", 
+                        # "scripts/install-qemu.sh", 
                         "scripts/install-nomad.sh", 
                         "scripts/install-consul.sh", 
                         "scripts/install-vault.sh", 
                         "scripts/install-glibc.sh", 
                         "scripts/cleanup.sh"]
-  }
-
-  post-processor "vagrant" {
-    # keep_input_artifact = true
-    # provider_override   = "virtualbox"
   }
 }
