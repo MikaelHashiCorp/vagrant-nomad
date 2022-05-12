@@ -1,10 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if [ -d /opt/cni/bin ]; then
-  return
-fi
-
 version="1.1.1"
 url="https://github.com/containernetworking/plugins/releases/download/v${version}/cni-plugins-linux-amd64-v${version}.tgz"
 

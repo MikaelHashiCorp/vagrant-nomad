@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-yum install -y openjdk-8-jre-headless
+yum -y install java-1.8.0-openjdk-headless

@@ -18,12 +18,12 @@ curl -sSL -O \
 curl -sSL -O \
   "https://releases.hashicorp.com/consul/${version}/consul_${version}_linux_amd64.zip"
 
-if ! sha256sum --check --ignore-missing "consul_${version}_SHA256SUMS"; then
+if [[! sha256sum --check "consul_${version}_SHA256SUMS" 2>/dev/null | grep OK$ == *"OK"*]] ; then
   echo "failed to verify consul SHA256SUMS"
   exit 1
 fi
 
-unzip -d /opt/consul/bin "consul_${version}_linux_amd64.zip"
+unzip -o -d /opt/consul/bin "consul_${version}_linux_amd64.zip"
 
 # set ownership
 chown -R consul:consul /opt/consul

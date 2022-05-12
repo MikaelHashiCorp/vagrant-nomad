@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-yum install glibc-devel
+yum -y install glibc-devel

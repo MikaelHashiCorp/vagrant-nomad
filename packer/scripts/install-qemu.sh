@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-yum install -y \
+yum -y install \
   bridge-utils \
   qemu-kvm \
   qemu-img \

@@ -1,7 +1,7 @@
 set -euo pipefail
 
-yum update
-yum install -y \
+yum -y update
+yum -y install \
     epel-release \
     zip \
     unzip \
