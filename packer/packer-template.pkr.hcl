@@ -21,7 +21,6 @@ build {
   provisioner "shell" {
     execute_command = "{{ .Vars }} sudo -E -S bash '{{ .Path }}'"
     scripts         = [ "scripts/base-yum.sh", 
-                        "scripts/disable-motd-news.sh", 
                         "scripts/install-cni-plugins.sh", 
                         "scripts/install-docker.sh", 
                         "scripts/install-java.sh", 
