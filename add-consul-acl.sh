@@ -5,7 +5,7 @@ vms="$(vagrant status | grep running)"
 servers="$(echo "$vms" | grep server | cut -f1 -d' ')"
 clients="$(echo "$vms" | grep client | cut -f1 -d' ')"
 
-export CONSUL_HTTP_ADDR=http://10.199.0.10:8500
+export CONSUL_HTTP_ADDR=http://192.168.56.10:8500
 
 if [ -z "$vms" ]; then echo "no vms found; exiting" && exit 1; fi
 if [ -z "$servers" ]; then echo "no servers found; exiting" && exit 1; fi
@@ -27,7 +27,7 @@ done
 #   The ACL system is currently in legacy mode
 #   Permission denied
 while true; do
-  if [[ "$(curl -s http://10.199.0.10:8500/v1/acl/policies)" =~ "Permission denied" ]]; then
+  if [[ "$(curl -s http://192.168.56.10:8500/v1/acl/policies)" =~ "Permission denied" ]]; then
     break
   else
     sleep 1
@@ -121,7 +121,7 @@ function waitForNomad() {
 
   echo -n "waiting for $things to be ready.."
   while true; do
-    if [ "$(curl -s "http://10.199.0.10:4646/v1""$path" 2>/dev/null | jq -r 'length')" == "$count" ]; then
+    if [ "$(curl -s "http://192.168.56.10:4646/v1""$path" 2>/dev/null | jq -r 'length')" == "$count" ]; then
       echo
       break
     else

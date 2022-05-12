@@ -1,8 +1,8 @@
 server_count = 1 # 1, 3, or 5
 client_count = 1
 
-server_ips = (1..server_count).map {|n| "10.199.0.%d" % [10*n]}
-client_ips = (1..client_count).map {|n| "10.199.1.%d" % [10*n]}
+server_ips = (1..server_count).map {|n| "192.168.56.%d" % [10*n]}
+client_ips = (1..client_count).map {|n| "192.168.56.%d" % [10*n]}
 
 Vagrant.configure("2") do |config|
   server_ips.each_with_index do |ip, n|
@@ -10,7 +10,7 @@ Vagrant.configure("2") do |config|
     name = "nomad-%s" % id
 
     config.vm.define name, autostart: true do |server|
-      server.vm.box = "bento/centos-7.9"
+      server.vm.box = "nomad-centos-7"
       server.vm.network :private_network, ip: ip
 
       maybe_replace_nomad(server)

@@ -21,7 +21,7 @@ drivers, including:
 * qemu
 * raw_exec
 
-The servers are all created in the 10.199.0.0/24 CIDR, and the clients within 10.199.1.0/24.
+The servers are all created in the 192.168.56.0/24 CIDR, and the clients within 10.199.1.0/24.
 
 All Nomad and Consul configuration is generated in `scripts/nomad.sh` and
 `scripts/consul.sh`, respectively.
@@ -35,7 +35,7 @@ All Nomad and Consul configuration is generated in `scripts/nomad.sh` and
     ```
 1. Access the Nomad web UI:
     ```
-    export NOMAD_ADDR=http://10.199.0.10:4646
+    export NOMAD_ADDR=http://192.168.56.10:4646
     nomad ui
     ```
 
