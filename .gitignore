@@ -2,3 +2,4 @@
 packer/output*
 nomad*
 *.log
+*.code-workspace

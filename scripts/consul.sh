@@ -6,14 +6,17 @@ chown consul:consul /opt/consul/data
 
 # write config
 cat <<EOF > /opt/consul/config.hcl
-node_name        = "$NODE_NAME"
-datacenter       = "vagrant"
-data_dir         = "/opt/consul/data"
-log_level        = "INFO"
-client_addr      = "0.0.0.0"
-ui               = true
-bind_addr        = "$BIND_ADDR"
-retry_join       = $RETRY_JOIN
+node_name         = "$NODE_NAME"
+datacenter        = "vagrant"
+data_dir          = "/opt/consul/data"
+log_level         = "INFO"
+client_addr       = "0.0.0.0"
+bind_addr         = "$BIND_ADDR"
+retry_join        = $RETRY_JOIN
+
+ui_config {
+    enabled = true
+}
 
 ports {
   grpc = 8502
