@@ -10,7 +10,8 @@ Vagrant.configure("2") do |config|
     name = "nomad-%s" % id
 
     config.vm.define name, autostart: true do |server|
-      server.vm.box = "krishicks/nomad"
+      server.vm.box = "nomad-ubuntu"
+      server.vm.box_url = "file:///Users/mikael/2-git/repro/vagrant-nomad/packer/output-vagrant/package.box"
       server.vm.network :private_network, ip: ip
 
       maybe_replace_nomad(server)
@@ -43,7 +44,8 @@ Vagrant.configure("2") do |config|
     name = "nomad-%s" % id
 
     config.vm.define name, autostart: true do |client|
-      client.vm.box = "krishicks/nomad"
+      client.vm.box = "nomad-ubuntu"
+      client.vm.box_url = "file:///Users/mikael/2-git/repro/vagrant-nomad/packer/output-vagrant/package.box"
       client.vm.network :private_network, ip: ip
 
       # client.vm.provider "virtualbox" do |provider|

@@ -1,3 +1,6 @@
 .vagrant
-packer/output-vagrant
+packer/output*
 nomad*
+*.log
+*.DS_Store
+*.code-workspace

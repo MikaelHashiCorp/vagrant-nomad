@@ -23,7 +23,6 @@
         "scripts/install-nomad.sh",
         "scripts/install-consul.sh",
         "scripts/install-vault.sh",
-        "scripts/install-libc6-from-groovy.sh",
         "scripts/cleanup.sh"
       ]
     }

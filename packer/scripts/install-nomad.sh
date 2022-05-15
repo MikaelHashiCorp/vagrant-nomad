@@ -9,7 +9,7 @@ fi
 # create dirs
 mkdir -p /opt/nomad/bin
 
-version="1.0.2"
+version="1.2.6"
 
 # install from releases.hashicorp.com
 curl -sSL -O \
