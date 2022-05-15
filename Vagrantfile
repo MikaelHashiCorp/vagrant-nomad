@@ -11,6 +11,7 @@ Vagrant.configure("2") do |config|
 
     config.vm.define name, autostart: true do |server|
       server.vm.box = "nomad-centos-7"
+      server.vm.box_url = "file:///Users/mikael/2-git/repro/vagrant-nomad/packer/output-centos-7/package.box"
       server.vm.network :private_network, ip: ip
 
       maybe_replace_nomad(server)

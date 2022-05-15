@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-echo 'export PATH=$PATH:/opt/nomad/bin' >> /home/vagrant/.profile
+echo 'export PATH=$PATH:/opt/nomad/bin' >> /home/vagrant/.bash_profile
 
 # add nomad to docker group
 usermod -G docker -a nomad
