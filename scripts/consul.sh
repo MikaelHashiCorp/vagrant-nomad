@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+echo 'export PATH=$PATH:/opt/consul/bin' >> /home/vagrant/.profile
+
 mkdir -p /opt/consul/data
 chown consul:consul /opt/consul/data
 
