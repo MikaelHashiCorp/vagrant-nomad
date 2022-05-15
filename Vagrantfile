@@ -1,8 +1,8 @@
 server_count = 1 # 1, 3, or 5
 client_count = 1
 
-server_ips = (1..server_count).map {|n| "192.168.56.%d" % [10*n]}
-client_ips = (1..client_count).map {|n| "192.168.56.%d" % [10*n]}
+server_ips = (1..server_count).map {|n| "10.199.0.%d" % [10*n]}
+client_ips = (1..client_count).map {|n| "10.199.1.%d" % [10*n]}
 
 Vagrant.configure("2") do |config|
   server_ips.each_with_index do |ip, n|
