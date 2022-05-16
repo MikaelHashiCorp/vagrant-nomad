@@ -27,7 +27,7 @@ done
 #   The ACL system is currently in legacy mode
 #   Permission denied
 while true; do
-  if [[ "$(curl -s http://10.199.0:8500/v1/acl/policies)" =~ "Permission denied" ]]; then
+  if [[ "$(curl -s http://10.199.0.10:8500/v1/acl/policies)" =~ "Permission denied" ]]; then
     break
   else
     sleep 1
