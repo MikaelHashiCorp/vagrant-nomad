@@ -3,3 +3,4 @@ packer/output*
 nomad*
 *.log
 *.code-workspace
+*.DS_Store
