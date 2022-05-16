@@ -16,8 +16,13 @@ Vagrant.configure("2") do |config|
 
       maybe_replace_nomad(server)
 
-      server.vm.provision "shell", path: "scripts/setup_ssh.sh"
-      server.vm.provision "shell", path: "scripts/docker.sh"
+      server.vm.provision "shell", 
+        name: "setup-ssh",
+        path: "scripts/setup_ssh.sh"
+
+      server.vm.provision "shell", 
+        name: "docker",
+        path: "scripts/docker.sh"
 
       server.vm.provision "shell",
         name: "consul",
