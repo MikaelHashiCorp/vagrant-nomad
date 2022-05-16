@@ -4,3 +4,4 @@ nomad*
 *.log
 *.code-workspace
 *.DS_Store
+*federation*
