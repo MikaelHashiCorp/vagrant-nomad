@@ -1,0 +1,38 @@
+name = "nomad-client-00"
+
+advertise {
+  http = "10.199.1.10"
+  rpc  = "10.199.1.10"
+  serf = "10.199.1.10"
+}
+
+leave_on_interrupt = true
+leave_on_terminate = true
+
+consul {}
+
+client {
+  enabled = true
+  network_interface = "eth1"
+
+  host_volume "proc" {
+    path = "/proc/"
+    read_only = true
+  }
+
+  plugin "docker" {
+    config {
+      allow_privileged = true
+    }
+    volumes {
+      enabled = true
+    }
+  }
+}
+
+plugin "raw_exec" {
+  config {
+    enabled = true
+  }
+}
+
